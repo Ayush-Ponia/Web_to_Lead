@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salesforce Web-to-Lead</title>
+<link href="https://fonts.googleapis.com/css2?family=Salesforce+Sans:wght@300;400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', 'Salesforce Sans', Arial, sans-serif;
+  background: linear-gradient(135deg, #0176d3 0%, #0a5cab 50%, #032d60 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow-x: hidden;
+  padding: 20px;
+}
+
+/* Animated particles background */
+.particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  animation: float 6s infinite ease-in-out;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+}
+
+/* Main container */
+.form-wrapper {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 900px;
+  animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 100px rgba(1, 118, 211, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35), 0 0 120px rgba(1, 118, 211, 0.15);
+}
+
+/* Header section */
+.form-header {
+  background: linear-gradient(135deg, #0176d3 0%, #0a5cab 100%);
+  padding: 40px 30px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.form-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  animation: pulse 4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+.form-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.form-header p {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.9);
+  position: relative;
+  z-index: 1;
+  font-weight: 300;
+}
+
+/* Form body */
+.form-body {
+  padding: 50px 40px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-bottom: 10px;
+}
+
+.form-group {
+  position: relative;
+  animation: fadeIn 0.6s ease forwards;
+  opacity: 0;
+}
+
+.form-group:nth-child(1) { animation-delay: 0.1s; }
+.form-group:nth-child(2) { animation-delay: 0.2s; }
+.form-group:nth-child(3) { animation-delay: 0.3s; }
+.form-group:nth-child(4) { animation-delay: 0.4s; }
+.form-group:nth-child(5) { animation-delay: 0.5s; }
+.form-group:nth-child(6) { animation-delay: 0.6s; }
+.form-group:nth-child(7) { animation-delay: 0.7s; }
+.form-group:nth-child(8) { animation-delay: 0.8s; }
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #032d60;
+  margin-bottom: 8px;
+  transition: color 0.3s ease;
+  letter-spacing: 0.3px;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+input[type="text"],
+input[type="email"] {
+  width: 100%;
+  padding: 14px 16px;
+  padding-left: 45px;
+  border: 2px solid #d8dde6;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: #f9fafb;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+  color: #032d60;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus {
+  border-color: #0176d3;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(1, 118, 211, 0.1), 0 4px 12px rgba(1, 118, 211, 0.15);
+  transform: translateY(-2px);
+}
+
+input[type="text"]:focus + .input-icon,
+input[type="email"]:focus + .input-icon {
+  color: #0176d3;
+  transform: scale(1.1);
+}
+
+/* Input icons */
+.input-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #7f8fa4;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+/* Submit button */
+.submit-wrapper {
+  margin-top: 40px;
+  text-align: center;
+}
+
+input[type="submit"] {
+  background: linear-gradient(135deg, #0176d3 0%, #0a5cab 100%);
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  padding: 16px 60px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 20px rgba(1, 118, 211, 0.3);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+}
+
+input[type="submit"]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+input[type="submit"]:hover::before {
+  left: 100%;
+}
+
+input[type="submit"]:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 30px rgba(1, 118, 211, 0.4);
+}
+
+input[type="submit"]:active {
+  transform: translateY(-1px) scale(0.98);
+}
+
+/* Success message */
+.success-message {
+  display: none;
+  background: #4bca81;
+  color: white;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: 600;
+  animation: slideDown 0.5s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .form-header h1 {
+    font-size: 2rem;
+  }
+  
+  .form-body {
+    padding: 30px 20px;
+  }
+  
+  input[type="submit"] {
+    padding: 14px 40px;
+    font-size: 1rem;
+  }
+}
+
+/* Loading spinner */
+.spinner {
+  display: none;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+</style>
+</head>
+<body>
+
+<!-- Animated particles -->
+<div class="particles" id="particles"></div>
+
+<div class="form-wrapper">
+  <div class="form-card">
+    <!-- Header -->
+    <div class="form-header">
+      <h1>WEB-TO-LEAD</h1>
+      <p>Connect with us and grow your business</p>
+    </div>
+
+    <!-- Form body -->
+    <div class="form-body">
+      <div class="success-message" id="successMessage">
+        ✓ Form submitted successfully!
+      </div>
+
+      <form action="https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8&orgId=00DdL00000cofVB" method="POST" id="leadForm">
+        <input type="hidden" name="oid" value="00DdL00000cofVB">
+        <input type="hidden" name="retURL" value="http://">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="first_name">First Name</label>
+            <div class="input-wrapper">
+              <input id="first_name" maxlength="40" name="first_name" size="20" type="text" required>
+              <span class="input-icon">👤</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="last_name">Last Name</label>
+            <div class="input-wrapper">
+              <input id="last_name" maxlength="80" name="last_name" size="20" type="text" required>
+              <span class="input-icon">👤</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <div class="input-wrapper">
+              <input id="email" maxlength="80" name="email" size="20" type="text" required>
+              <span class="input-icon">✉️</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Phone</label>
+            <div class="input-wrapper">
+              <input id="phone" maxlength="40" name="phone" size="20" type="text" required>
+              <span class="input-icon">📱</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="company">Company</label>
+            <div class="input-wrapper">
+              <input id="company" maxlength="40" name="company" size="20" type="text" required>
+              <span class="input-icon">🏢</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="city">City</label>
+            <div class="input-wrapper">
+              <input id="city" maxlength="40" name="city" size="20" type="text" required>
+              <span class="input-icon">🏙️</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="state">State/Province</label>
+            <div class="input-wrapper">
+              <input id="state" maxlength="20" name="state" size="20" type="text" required>
+              <span class="input-icon">📍</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="submit-wrapper">
+          <input type="submit" name="submit" value="Submit Lead">
+          <div class="spinner" id="spinner"></div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+// Generate animated particles
+const particlesContainer = document.getElementById('particles');
+for (let i = 0; i < 30; i++) {
+  const particle = document.createElement('div');
+  particle.className = 'particle';
+  particle.style.left = Math.random() * 100 + '%';
+  particle.style.animationDelay = Math.random() * 6 + 's';
+  particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+  particlesContainer.appendChild(particle);
+}
+
+// Form submission handling
+const form = document.getElementById('leadForm');
+const successMessage = document.getElementById('successMessage');
+const spinner = document.getElementById('spinner');
+const submitBtn = form.querySelector('input[type="submit"]');
+
+form.addEventListener('submit', function(e) {
+  // Show loading state
+  submitBtn.style.display = 'none';
+  spinner.style.display = 'block';
+  
+  // After submission (form will redirect, but this shows the animation)
+  setTimeout(() => {
+    successMessage.style.display = 'block';
+    spinner.style.display = 'none';
+    submitBtn.style.display = 'inline-block';
+  }, 1000);
+});
+
+// Input focus animations
+const inputs = document.querySelectorAll('input[type="text"], input[type="email"]');
+inputs.forEach(input => {
+  input.addEventListener('focus', function() {
+    this.parentElement.parentElement.querySelector('label').style.color = '#0176d3';
+  });
+  
+  input.addEventListener('blur', function() {
+    this.parentElement.parentElement.querySelector('label').style.color = '#032d60';
+  });
+  
+  // Input validation visual feedback
+  input.addEventListener('input', function() {
+    if (this.value.length > 0) {
+      this.style.borderColor = '#4bca81';
+    } else {
+      this.style.borderColor = '#d8dde6';
+    }
+  });
+});
+</script>
+
+</body>
+</html>
